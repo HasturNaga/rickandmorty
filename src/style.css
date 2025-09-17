@@ -22,3 +22,19 @@
   height: auto;
   z-index: 10;          /* para que esté encima de la imagen */
 }
+
+body{
+  background-color: lightsalmon;
+}
+
+.titulo {
+  position: absolute;
+  top: 20px;          /* distancia desde arriba */
+  left: 50%;          /* lo coloca en el medio horizontal */
+  transform: translateX(-50%); /* corrige el centrado */
+  color: black;       /* texto visible sobre la imagen */
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.7); /* mejora la visibilidad */
+  z-index: 10;        /* encima de la imagen */
+}

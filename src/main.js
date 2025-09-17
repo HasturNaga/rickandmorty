@@ -8,4 +8,9 @@ document.querySelector('#app').innerHTML = `
   <h1 class="titulo">Bienvenido a la API de Rick y Morty</h1>
 </div>
 
+
+
+<footer class="bg-dark text-light py3 text-center>
+  <p>Todos los derechos reservados</p>
+</footer>
 `;

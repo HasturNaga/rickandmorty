@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.fullscreen-img {
+  width: 100vw;       /* ocupa el 100% del ancho de la ventana */
+  height: 100vh;      /* ocupa el 100% del alto de la ventana */
+  object-fit: cover;  /* ajusta la imagen sin deformarla (recorta si es necesario) */
+}
+
+.imagen-con-logo {
+  position: relative; /* contenedor relativo para que los hijos absolutos se posicionen respecto a él */
+}
+
+.logo {
+  position: absolute;   /* posición absoluta sobre el contenedor */
+  top: 20px;            /* distancia desde arriba */
+  left: 20px;           /* distancia desde la izquierda */
+  width: 100px;         /* tamaño del logo */
+  height: auto;
+  z-index: 10;          /* para que esté encima de la imagen */
+}

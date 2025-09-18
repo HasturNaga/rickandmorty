@@ -1,40 +1,36 @@
-* {
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-.fullscreen-img {
-  width: 100vw;       /* ocupa el 100% del ancho de la ventana */
-  height: 100vh;      /* ocupa el 100% del alto de la ventana */
-  object-fit: cover;  /* ajusta la imagen sin deformarla (recorta si es necesario) */
+.hero {
+  position: relative;
+  min-height: 100vh;              
+  background: url('/imagen.jpg') center/cover no-repeat;
+  display: flex;
+  justify-content: flex-start;   /* ahora alinea a la izquierda */
+  align-items: center;           /* centra verticalmente */
+  padding: 2rem;
 }
 
-.imagen-con-logo {
-  position: relative; /* contenedor relativo para que los hijos absolutos se posicionen respecto a él */
-}
-
-.logo {
-  position: absolute;   /* posición absoluta sobre el contenedor */
-  top: 20px;            /* distancia desde arriba */
-  left: 20px;           /* distancia desde la izquierda */
-  width: 100px;         /* tamaño del logo */
-  height: auto;
-  z-index: 10;          /* para que esté encima de la imagen */
-}
-
-body{
-  background-color: lightsalmon;
+.contenido {
+  max-width: 500px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); 
+  padding: 2rem;
+  border-radius: 10px;
 }
 
 .titulo {
-  position: absolute;
-  top: 20px;          /* distancia desde arriba */
-  left: 50%;          /* lo coloca en el medio horizontal */
-  transform: translateX(-50%); /* corrige el centrado */
-  color: black;       /* texto visible sobre la imagen */
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: bold;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.7); /* mejora la visibilidad */
-  z-index: 10;        /* encima de la imagen */
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+}
+
+footer {
+  background: #111;
+  color: #ccc;
+  text-align: center;
+  padding: 15px;
+  margin-top: auto;
 }

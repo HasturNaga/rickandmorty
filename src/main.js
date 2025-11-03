@@ -1,34 +1,103 @@
+
+import { obtenerTodosLosPj, obtenerPjPorPagina } from '../api/obtenerTodosLosPj.js';
+import { obtenerPjPorNombre } from '../api/obtenerPjPorNombre.js';
+import axios from 'axios';
 import './style.css';
 
 document.querySelector('#app').innerHTML = `
 
-<div class="hero d-flex">
-  <!-- Contenido superpuesto -->
-  <div class="contenido text-white">
-    <img src="/vite.svg" alt="Logo" class="mb-3" style="min-width: 5vw;">
-    <h1 class="titulo mb-4">Bienvenido a la API de Rick y Morty</h1>
-
-    <form class="mb-3">
-      <div class="input-group" style="max-width: 400px;">
-        <input type="text" class="form-control" placeholder="Buscar personaje..." id="inputValue">
-        <button class="btn btn-primary" type="button" id="buscarPorId">Buscar por nombre</button>
-      </div>
-    </form>
-
-    <div class="d-flex flex-wrap mb-3" style="max-width: 400px;">
-      <select id="ubicaciones" class="form-select m-2 flex-grow-1">
-        <option value="" selected>Selecciona una ubicación</option>
-      </select>
-      <button class="btn btn-primary m-2" type="button" id="buscarPorUbicacion">Buscar por ubicación</button>
-    </div>
-
-    <div id="paginaction" class="d-flex flex-wrap align-items-center"></div>
-    <div id="resultado" class="d-flex flex-wrap"></div>
-  </div>
+<div>
+  <img src="./public/imagen.webp" alt="imagen" class="img-fluid">
+  <img src="./public/Logo.png" alt="Logo" style="min-width: 100vw;">
 </div>
 
-<!-- Footer -->
-<footer class="bg-dark text-light py-3 text-center">
-  <p class="m-0">Todos los derechos reservados <span>2023</span></p>
+<div class="d-flex justify-content-center align-items-center text-white" style="background-color: 10vh;">
+  <h1>Personajes de Rick and Morty</h1>
+</div>
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <form>
+    <div class="input-group m-1 style="max-width: 400px;">
+      <input type="text" class="form-control" placeholder="Buscar personaje por nombre" aria-label="Buscar" aria-describedby="basic-addon2" id="inputValue">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" id="buscarPorId">Buscar por nombre</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="input-group m-3 d-flex flex-wrap" style="max-width: 400px;">
+    <select id="Ubicaciones" class="form-select m-2">
+      <option value="" selected>Selecciona una ubicacion</option>
+    </select>
+    <button class="btn btn-primary m-2" type="button" id="buscarUbicacionPersonaje">Buscar por ubicacion</button>
+  </div>
+  <div id="pagination" class="d-flex flex-wrap align-items-center"></div>
+  <div id="resultado" class="d-flex flex-wrap"></div>
+</div>
+
+<footer class="bg-dark text-light py-3 text center">
+  <p class="mb-0">Todos los derechos reservados <span>2023</span></p>
 </footer>
 `;
+
+
+const resultado = document.querySelector('#resultado');
+
+function limpiarHTML() {
+  while (resultado.firstChild) {
+    resultado.removeChild(resultado.firstChild);
+  }
+}
+
+window.addEventListener('load', async () => {
+  const pagination = document.querySelector('#pagination');
+  let allCharactersData = await obtenerTodosLosPj();
+
+  for (let page=1; page <= allCharactersData.pages; page++) {
+    const button = document.createElement('button');
+    button.textContent = page;
+    button.classList.add('btn', 'btn-primary', 'm-1', 'p-2');
+
+    button.addEventListener('click', async () => {
+      limpiarHTML();
+      const resultadoTodosLosPersonajes = await obtenerPjPorPagina(page);
+      const personajesHTML = resultadoTodosLosPersonajes.results.map(personaje => `
+        <div class="card m-2 shadoww" style="width: 20rem;">
+          <div class="card-body">
+            <h2>${personaje.name}</h2>
+            <h5 class="card-title">Genero: ${personaje.gender}</h5>
+            <img src="${personaje.image}" alt="${personaje.name}"class="img-fluid">
+            <p>Especie: ${personaje.species}</p>
+            <p>Estado: ${personaje.status}</p>
+          </div>
+        </div>
+      `)
+
+      resultado.innerHTML = personajesHTML;
+    });
+    pagination.appendChild(button);
+  }
+});
+
+  const btnBusquedaByName = document.querySelector("#buscarPorId");
+  
+  btnBusquedaByName.addEventListener("click", async () => {
+    limpiarHTML();
+
+  const valorInput = document.querySelector('#inputValue').value;
+  const personajes = await getByName(valorInput);
+
+  const personajesHTML = personajes.map(personaje => `
+    <div class="card m-2 shadow" style="width: 20rem;">
+      <div class="card-body">
+        <h2>${personaje.name}</h2>
+        <h5 class="card-title">Género: ${personaje.gender}</h5>
+        <img src="${personaje.image}" alt="${personaje.name}" class="img-fluid">
+        <p>Especie: ${personaje.species}</p>
+        <p>Estado: ${personaje.status}</p>
+      </div>
+    </div>
+  `)
+
+  resultado.innerHTML = personajesHTML; // Insertar el HTML generado en el resultado
+});

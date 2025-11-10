@@ -1,8 +1,11 @@
-
-import { obtenerTodosLosPj, obtenerPjPorPagina } from '../api/obtenerTodosLosPj.js';
-import { obtenerPjPorNombre } from '../api/obtenerPjPorNombre.js';
-import axios from 'axios';
 import './style.css';
+import { obtenerPjPorNombre } from '../api/obtenerPjPorNombre.js';
+import { obtenerPjPorPagina } from '../api/obtenerPjPorPagina.js';
+import { obtenerPjPorUbicacion } from '../api/obtenerPjPorUbicacion.js';  
+import { obtenerPjPorUrl } from '../api/obtenerPjPorUrl.js';
+import { obtenerTodosLosPj } from '../api/obtenerTodosLosPj.js';
+import { obtenerUbicaciones } from '../api/obtenerUbicaciones.js';
+
 
 document.querySelector('#app').innerHTML = `
 
@@ -26,10 +29,10 @@ document.querySelector('#app').innerHTML = `
   </form>
 
   <div class="input-group m-3 d-flex flex-wrap" style="max-width: 400px;">
-    <select id="Ubicaciones" class="form-select m-2">
+    <select id="ubicaciones" class="form-select m-2">
       <option value="" selected>Selecciona una ubicacion</option>
     </select>
-    <button class="btn btn-primary m-2" type="button" id="buscarUbicacionPersonaje">Buscar por ubicacion</button>
+    <button class="btn btn-primary m-2" type="button" id="obtenerUbicacionPersonajes">Buscar por ubicacion</button>
   </div>
   <div id="pagination" class="d-flex flex-wrap align-items-center"></div>
   <div id="resultado" class="d-flex flex-wrap"></div>
@@ -40,8 +43,9 @@ document.querySelector('#app').innerHTML = `
 </footer>
 `;
 
-
 const resultado = document.querySelector('#resultado');
+
+const pagination = document.querySelector('#pagination');
 
 function limpiarHTML() {
   while (resultado.firstChild) {
@@ -50,7 +54,6 @@ function limpiarHTML() {
 }
 
 window.addEventListener('load', async () => {
-  const pagination = document.querySelector('#pagination');
   let allCharactersData = await obtenerTodosLosPj();
 
   for (let page=1; page <= allCharactersData.pages; page++) {
@@ -61,7 +64,7 @@ window.addEventListener('load', async () => {
     button.addEventListener('click', async () => {
       limpiarHTML();
       const resultadoTodosLosPersonajes = await obtenerPjPorPagina(page);
-      const personajesHTML = resultadoTodosLosPersonajes.results.map(personaje => `
+      const personajesHTML = resultadoTodosLosPersonajes.map(personaje => `
         <div class="card m-2 shadoww" style="width: 20rem;">
           <div class="card-body">
             <h2>${personaje.name}</h2>
@@ -72,7 +75,6 @@ window.addEventListener('load', async () => {
           </div>
         </div>
       `)
-
       resultado.innerHTML = personajesHTML;
     });
     pagination.appendChild(button);
@@ -80,12 +82,12 @@ window.addEventListener('load', async () => {
 });
 
   const btnBusquedaByName = document.querySelector("#buscarPorId");
-  
   btnBusquedaByName.addEventListener("click", async () => {
+
     limpiarHTML();
 
   const valorInput = document.querySelector('#inputValue').value;
-  const personajes = await getByName(valorInput);
+  const personajes = await obtenerPjPorNombre(valorInput);
 
   const personajesHTML = personajes.map(personaje => `
     <div class="card m-2 shadow" style="width: 20rem;">
@@ -101,3 +103,44 @@ window.addEventListener('load', async () => {
 
   resultado.innerHTML = personajesHTML; // Insertar el HTML generado en el resultado
 });
+
+window.addEventListener('load', async () => {
+  const ubicacionesResponse = await obtenerUbicaciones();
+  //selector para el select de ubicaciones
+  const selectUbicaciones = document.getElementById('ubicaciones');
+  ubicacionesResponse.forEach(ubicaciones => {
+    const option = document.createElement('option');
+    option.value = ubicaciones.url;
+    option.textContent = ubicaciones.name;
+    selectUbicaciones.appendChild(option);
+  });
+});
+
+const ubicacionButton = document.querySelector('#obtenerUbicacionPersonajes');
+ubicacionButton.addEventListener('click', async () => {
+  limpiarHTML();
+  const selectUbicaciones = document.getElementById('ubicaciones').value;
+  const urlsPersonajesPorUbi = await obtenerPjPorUbicacion(selectUbicaciones);
+
+  const detallesPersonajes = [];
+
+  for (const url of urlsPersonajesPorUbi) {
+    const personaje = await obtenerPjPorUrl(url);
+    detallesPersonajes.push(personaje);
+  }
+
+  const personajesHTML = detallesPersonajes.map(personaje => `
+    <div class="card m-2 shadow" style="width: 20rem;">
+      <div class="card-body">
+        <h2>${personaje.name}</h2>
+        <h5 class="card-title">Género: ${personaje.gender}</h5>
+        <img src="${personaje.image}" alt="${personaje.name}" class="img-fluid">
+        <p>Especie: ${personaje.species}</p>
+        <p>Estado: ${personaje.status}</p>
+      </div>
+    </div>
+  `);
+
+  resultado.innerHTML = personajesHTML.join('');
+});
+

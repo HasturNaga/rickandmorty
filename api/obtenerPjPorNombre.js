@@ -2,22 +2,17 @@ import axios from "axios";
 
 const baseURL = "https://rickandmortyapi.com/api/character";
 
-// 🔹 Si querés buscar por nombre:
-export const obtenerPjPorNombre = async (nombre) => {
+export const obtenerPjPorNombre = async (id) => {
+
     try {
-    // Ejemplo: https://rickandmortyapi.com/api/character/?name=Rick
-        const response = await axios.get(`${baseURL}/?name=${encodeURIComponent(nombre)}`);
+        const response = await axios.get(`${baseURL}`);
         const data = response.data;
+        const resultado = data.results;
+        const resultadoByName = resultado.filter(el => el.name == id)
+        return resultadoByName    
 
-    // Si hay resultados, devuelve el primero
-        if (data.results && data.results.length > 0) {
-            return data.results[0];
-        }
-
-    // Si no encuentra nada, devuelve null
-        return null;
     } catch (error) {
-        console.error("Error al obtener el personaje:", error);
-        return null;
+        console.error("Error al obtener los personajes:", error);
+        return []; 
     }
 };

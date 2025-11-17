@@ -105,6 +105,7 @@ window.addEventListener('load', async () => {
 });
 
 window.addEventListener('load', async () => {
+  limpiarHTML();
   const ubicacionesResponse = await obtenerUbicaciones();
   //selector para el select de ubicaciones
   const selectUbicaciones = document.getElementById('ubicaciones');

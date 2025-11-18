@@ -10,8 +10,8 @@ import { obtenerUbicaciones } from '../api/obtenerUbicaciones.js';
 document.querySelector('#app').innerHTML = `
 
 <div>
-  <img src="/assets/imagen.webp" alt="imagen" class="img-fluid">
-  <img src="/assets/Logo.png" alt="Logo" style="min-width: 100vw;">
+  <img src="/dist/imagen.webp" alt="imagen" class="img-fluid">
+  <img src="/dist/Logo.png" alt="Logo" style="min-width: 100vw;">
 </div>
 
 <div class="d-flex justify-content-center align-items-center text-white" style="background-color: 10vh;">

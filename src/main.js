@@ -9,9 +9,14 @@ import { obtenerUbicaciones } from '../api/obtenerUbicaciones.js';
 
 document.querySelector('#app').innerHTML = `
 
-<img src="./imagen.webp" alt="imagen" class="img-fluid">
-<img src="./Logo.png" alt="Logo">
-
+<div class="text-center">
+  <img src="/imagen.webp" alt="imagen" 
+      class="img-fluid" 
+      style="display:block; margin:auto;">
+  <img src="/Logo.png" alt="Logo"
+      class="img-fluid"
+      style="display:block; margin:auto; min-width:100vw;">
+</div>
 
 <div class="d-flex justify-content-center align-items-center text-white" style="background-color: 10vh;">
   <h1>Personajes de Rick and Morty</h1>
